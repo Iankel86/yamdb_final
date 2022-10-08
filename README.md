@@ -1,5 +1,5 @@
 # api_yamdb
-![badge](https://user-images.githubusercontent.com/86766017/175809946-525c22c7-c999-4101-85e0-f284ee3ac198.svg)
+![yamdb_final workflow](https://github.com/Iankel86/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 ## Групповой проект 
 __YAMDB__ собирает отзывы на произведения от пользователей. 
 
