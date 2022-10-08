@@ -9,7 +9,7 @@ services:
       - ./.env
 
   web:
-    image: lagmas/yamdb_final:latest
+    image: yankelll/api_yamdb:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -38,4 +38,4 @@ services:
 volumes:
   static_value:
   media_value:
-  database:
+  # database:
