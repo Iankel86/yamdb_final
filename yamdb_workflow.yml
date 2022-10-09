@@ -7,12 +7,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Запуск actions checkout — готового скрипта 
-    # для клонирования репозитория
     - uses: actions/checkout@v2
     - name: Set up Python
-      # Запуск actions setup-python — готового скрипта 
-      # для развёртывания окружения Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.7
@@ -25,11 +21,6 @@ jobs:
         cd api_yamdb/
         pip install -r requirements.txt
 
-    # - name: Test with flake8 and django tests
-    #   run: |
-    #     python -m flake8
-    #     cd api_yamdb/
-    #     python manage.py test
     - name: Test with pytest
       id: run_pytest
       run: pytest
@@ -38,20 +29,6 @@ jobs:
       run: |
         # python -m flake8
         pytest
-    
-
-    # - name: Send message if Tests failed
-    #   if: ${{ failure() }}
-    #   uses: appleboy/telegram-action@master
-    #   with:
-    #     to: ${{ secrets.TELEGRAM_TO }}
-    #     token: ${{ secrets.TELEGRAM_TOKEN }}
-    #     message: |
-    #       Статус шага run_install - ${{ steps.run_install.outcome }}
-    #       Статус шага pytest - ${{ steps.run_pytest.outcome }}
-    #       Статус шага run_flake8_django_tests - ${{ steps.run_flake8_django_tests.outcome }}
-    #       Ошибка при тестировании - ${{ github.repository }}
-    #       https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
  
   build_and_push_to_docker_hub:
       name: Push Docker image to Docker Hub
@@ -72,48 +49,9 @@ jobs:
           uses: docker/build-push-action@v2
           with:
             push: true
-            # context: ./api_yamdb
             context: api_yamdb
             file: api_yamdb/Dockerfile
-            # tags: yankelll/yamdb_final:latest
             tags: ${{ secrets.DOCKER_USERNAME }}/api_yamdb:latest
-
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build_and_push_to_docker_hub
-  #   steps:
-  #     - name: executing remote ssh commands to deploy
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.HOST }}
-  #         username: ${{ secrets.USER }}
-  #         key: ${{ secrets.SSH_KEY }}
-  #         passphrase: ${{ secrets.PASSPHRASE }}
-  #         script: |
-  #           # Выполняет pull образа с DockerHub
-  #           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/api_yamdb:latest
-            
-  #           sudo docker-compose stop
-  #           sudo docker-compose rm web
-  #           touch .env
-  #           echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-  #           echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-  #           echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-  #           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-  #           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-  #           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-  #           sudo docker-compose up -d
-  # send_message:
-  #   runs-on: ubuntu-latest
-  #   needs: deploy
-  #   steps:
-  #   - name: send message
-  #     uses: appleboy/telegram-action@master
-  #     with:
-  #       to: ${{ secrets.TELEGRAM_TO }}
-  #       token: ${{ secrets.TELEGRAM_TOKEN }}
-  #       message: ${{ github.workflow }} успешно выполнен!
-
 
   deploy:
     runs-on: ubuntu-latest
@@ -148,4 +86,3 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: ${{ github.workflow }} успешно выполнен!
-
